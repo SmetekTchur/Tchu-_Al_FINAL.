@@ -11,3 +11,23 @@ def play_game(players,rounds=11):
     scores = {player: 0 for player in players}
     target_score =list(range(2,13)) + list(range(2,13))[1:]
     
+    for round_number in range(1, rounds + 1):
+        print(f"\nKolo{round_number}: Cíl je {target_score[round_number - 1]}")
+        for player in players: 
+            score = play_round(player)
+            if score == target_score[round_number - 1]: 
+                scores[player]+= 1
+
+        print(f"{player} Dostal bod! Momentální skóre: {scores[player]}")
+    else:
+        print(f"{player} Nedostal bod. Momentální skóre: {scores[player]}")
+        print("\nKonečné skóre:")
+        for player, score in scores.items():
+            print(f"{player}: {score} bodů")
+
+            winner = max(scores, key=scores.get)
+            print(f"\nVítězem se stává {winner} s {scores[winner]} body!")
+
+if __name__ == "__main__":
+         players = ["Hráč 1", "Hráč 2", "Hráč 3"]
+play_game(players)    
