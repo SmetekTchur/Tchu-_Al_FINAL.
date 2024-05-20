@@ -1,6 +1,9 @@
 import random # knihovna
+
+
+
 def hod_kostkou():
-    return random.randint(1, 6)
+    return random.randint(1, 6) #randint dává náhodné čísla, protože to je vlastně random int
 
 def spočítej_skore(kostky):
     skore = 0
@@ -11,7 +14,7 @@ def spočítej_skore(kostky):
             skore += 60
         else:
             skore += kostka
-    return skore # return vrací čísla definice
+    return skore # return vrací hodnotu definice
 
 def hraj_kolo():
     kostky = [0, 0, 0]
