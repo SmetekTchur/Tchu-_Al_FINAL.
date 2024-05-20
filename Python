@@ -1,33 +1,54 @@
-import random
+import random # knihovna
+def hod_kostkou():
+    return random.randint(1, 6)
 
-def roll_dice():
-    return random.randint(1,6), random.randint(1,6)
-def play_round(player):
-    input(f"{player}, Stiskněte Enter pro hod kostkami")
-    dice = roll_dice()
-    print(f"{player} Hodil: {dice[0]} a {dice[1]} (součet: {sum(dice)})")
-    return sum(dice)
-def play_game(players,rounds=11):
-    scores = {player: 0 for player in players}
-    target_score =list(range(2,13)) + list(range(2,13))[1:]
+def spočítej_skore(kostky):
+    skore = 0
+    for kostka in kostky:
+        if kostka == 1:
+            skore += 100
+        elif kostka == 6:
+            skore += 60
+        else:
+            skore += kostka
+    return skore # return vrací čísla definice
+
+def hraj_kolo():
+    kostky = [0, 0, 0]
+    for _ in range(3):
+        for i in range(3): # každý hráč hraje 3x za sebou
+            if kostky[i] == 0: # náhodně vygeneruje 3 čísla od 1 do 6
+                kostky[i] = hod_kostkou()
+        print("Hod kostkami: ", kostky)
+        volba = input("Které kostky si necháte? Zadejte (0, 1, 2) oddělené mezerou nebo 'žádné' pro hod znovu: ")
+        if volba == 'žádné':
+            kostky = [random.randint(1,6),random.randint(1,6),random.randint(1,6)]
+                # pokud zadáte "žádné" tak se vygenerují úplně nová čísla
+        if volba != 'žádné':
+            ponechané_indexy = list(map(int, volba.split())) # split rozděluje danou věc
+            for i in range(3):
+                if i not in ponechané_indexy:
+                    kostky[i] = 0
+    skore = spočítej_skore(kostky)
+    print("Konečné kostky: ", kostky, " -> Skóre: ", skore)
+    return skore # tady je výpočet skore všech hráčů na konci kola
+
+def hraj_hru():
+    počet_hráčů = int(input("Zadejte počet hráčů: "))
+    skore = [0] * počet_hráčů
+    # zde se zadává počet hráčů
     
-    for round_number in range(1, rounds + 1):
-        print(f"\nKolo{round_number}: Cíl je {target_score[round_number - 1]}")
-        for player in players: 
-            score = play_round(player)
-            if score == target_score[round_number - 1]: 
-                scores[player]+= 1
+    for kolo in range(7):
+        print("\nKolo ", kolo + 1)
+        for hráč in range(počet_hráčů):
+            print("Tah hráče ", hráč + 1) # v tomto případě je Chicago na 7 kol
+            skore[hráč] += hraj_kolo()
+    
+    print("\nKonečné skóre:")
+    for hráč in range(počet_hráčů): 
+        print("Hráč ", hráč + 1, ": ", skore[hráč])
+    # výpočet finálního skore
+    vítěz = skore.index(max(skore)) + 1
+    print("\nVítězem je hráč ", vítěz, "!")
 
-        print(f"{player} Dostal bod! Momentální skóre: {scores[player]}")
-    else:
-        print(f"{player} Nedostal bod. Momentální skóre: {scores[player]}")
-        print("\nKonečné skóre:")
-        for player, score in scores.items():
-            print(f"{player}: {score} bodů")
-
-            winner = max(scores, key=scores.get)
-            print(f"\nVítězem se stává {winner} s {scores[winner]} body!")
-
-if __name__ == "__main__":
-         players = ["Hráč 1", "Hráč 2", "Hráč 3"]
-play_game(players)    
+hraj_hru()
